@@ -4,7 +4,7 @@
 
 ## Package
 
-- Version: `0.1.0`
+- Version: `0.1.1`
 - Image target: `/R4OS/PROTOCOLS/EXAMPLE.R4P`
 - Image scope: `test`
 - Canonical project manifest: `module.R4MF`

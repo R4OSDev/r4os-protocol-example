@@ -1,60 +1,26 @@
-﻿R4OS Protocol Example
-=====================
+﻿EXAMPLE.R4P
+===========
 
-Dieses Projekt ist der einfache Startpunkt fuer neue R4P-Protokollmodule in
-Zig. Es nutzt die aktuelle R4DEV-Oberflaeche aus `Code/System/SDK/r4os`.
+Eigenstaendiges Zig-Protokollprojekt unter Repositories/Protocols/Example.
+Build- und Versionswahrheit ist module.R4MF.
 
-Gezeigt wird:
-- R4P-init/shutdown/query/dispatch-Entries ueber
-  `r4os.r4dev.protocolEntriesAsm`
-- `r4os.r4dev.ProtocolApi` und `r4os.r4dev.ProtocolContext`
-- Registrierung der Rolle `misc.example`
-- Statusmeldung per `setStatus`
-- Query-Antwort mit `ProtocolStatus`
-- ein kleiner Dispatch-Vertrag auf `ProtocolBuffer`
+Anschluss: SDK_PROFILE=r4os-zig-r4p-generation2; R4DEV:Query2:2 und
+ProtocolInit2:2. r4os.technical2.protocolEntriesAsm erzeugt die Entries;
+ProtocolContext2 prueft die wirkliche ProtocolApi2 in ihrem geliehenen Scope.
+register_role und set_status sind vor Registrierung erforderlich. Deren
+konkrete Fehlercodes werden weitergegeben. Die Revision der technischen
+Tabelle ist unabhaengig vom Query2-/Entry-Symbolraum.
 
-Dispatch-Operationen:
-- `1`: Echo, kopiert den Input-Buffer in den Output-Buffer.
-- `2`: Checksum, schreibt eine einfache additive 32-Bit-Pruefsumme little
-  endian in den Output-Buffer.
+Operation1 kopiert die Eingabebytes als Echo, Operation2 schreibt die additive32bit-Pruefsumme little endian. BinaryCursor/Span/Writer pruefen die geliehenen Bytebereiche; zu kleine Ausgabe meldet weiterhin-5, ungueltige Metadaten-2, unbekannte Operation-4. Leere Bereiche bleiben bei vorhandenem Datenzeiger erlaubt. Die Ausgabe wird erst nach erfolgreichem Schreiben veroeffentlicht; ueberlappende Echo-Bereiche haben memmove-Semantik.
 
-Build:
+Build aus diesem Projektordner:
+    Linux: ./Build.sh
+    Windows: Build.bat
+Beide Starter verwenden dieselbe PowerShell7-Logik und SDK-Auswahl.
+Workspace-Artefakt: Artifacts/Modules/Example/EXAMPLE.R4P
+Image-Ziel: /R4OS/PROTOCOLS/EXAMPLE.R4P
+IMAGE_SCOPE=test
 
-    cd Code
-    ..\DevTools\Zig\zig.exe build
-
-Ergebnis:
-
-    Code\zig-out\EXAMPLE.R4P
-
-Im normalen Image liegt die Datei unter:
-
-    C:\R4OS\PROTOCOLS\EXAMPLE.R4P
-
-Abnahme in R4OS:
-
-    C:\>R4PTEST
-    C:\>PROTOCOLS
-
-`R4PTEST` prueft, dass `misc.example` aktiv ist und dass der Echo-Dispatch
-funktioniert. `PROTOCOLS` zeigt `EXAMPLE.R4P` in der Protocol Registry.
-
-Projektstruktur seit 0.51.22
---------------------------------
-
-Dieses Verzeichnis ist ein eigenstaendiges R4OS-SDK-Projekt fuer EXAMPLE.R4P.
-
-Build:
-
-    cd Code\System\Protocols\Example
-    ..\..\..\DevTools\Zig\zig.exe build
-
-Artefakt:
-
-    zig-out\EXAMPLE.R4P
-
-Manifest:
-
-    module.R4MF
-
-Image-Zielpfad: C:\R4OS\PROTOCOLS\EXAMPLE.R4P
+Abnahme: vorhandene SPECTRA CHECK LOADER und SYNTHD im passenden Testimage;
+bei expliziter API2-Pruefung normaler DEV2-Aufrufer. Windows-Kompilierung
+allein belegt keine Windowsausfuehrung oder physische Audiowiedergabe.
